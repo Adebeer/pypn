@@ -16,10 +16,11 @@ As another example, consider how you'd use a pipeline framework when building an
 |Stages  | Function             | Description
 |--------| ---------------------| ------------
 |Stage 1 | Logging              | Log all queries/requests/responses from database
-|Stage 2 | Event Source Publish | If the command is an update/insert/delete command, publish an event to notify subscribers of data changes
+|Stage 2 | Event Notification | If the command is an update/insert/delete command, publish an event to notify subscribers of data changes.  
 |Stage 2 | Level 1 Session Cache| Cache data fetched from database into a local memory cache to minimize unecessary database calls (similar to what ORMs like NHibernate would do)
 |Stage 3 | Level 2 Session Cache| Distributed cache using something like NCache, memcache, Redis, etc...
 |Stage 4 | ORM DAL              | Core ORM code responsible for querying and updating data
+<i>Note: The stage implementations could further cooperate via Pypn's support for session commands to, for example, ensure events don't get published until after the database transaction commits. </i>
 
 ## What makes this Pipeline framework unique
 This pipeline framework supports the concept of sessions, Run-commands and PostRun-commands. Essentially, session commands can be used to begin (start), rollback (abort) or commit (end) transactions. Each stage implementation can provide its own interpretation of starting/aborting or ending a transaction.
